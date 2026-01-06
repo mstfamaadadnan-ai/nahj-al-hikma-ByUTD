@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نهج الحكمة | أقوال الإمام علي (ع)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+
+    <header>
+        <nav>
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo" class="app-logo">
+                <span class="logo-text">نهج الحكمة</span>
+            </div>
+            <button id="theme-toggle" aria-label="تبديل الوضع">🌙</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="daily-section" class="card">
+            <h3>حكمة اليوم</h3>
+            <p id="daily-text">جاري التحميل...</p>
+            <small id="daily-source"></small>
+        </section>
+
+        <section class="controls">
+            <input type="text" id="search-input" placeholder="ابحث في الحِكم...">
+            <select id="topic-filter">
+                <option value="all">كل المواضيع</option>
+            </select>
+            <button id="show-favs">المفضلة ⭐</button>
+        </section>
+
+        <div id="quotes-container" class="grid"></div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>

@@ -1,80 +1,64 @@
-const quotes = [
-    { id: 1, topic: "العلم", text: "كُلُّ وِعَاءٍ يَضِيقُ بِمَا جُعِلَ فِيهِ إِلاَّ وِعَاءَ الْعِلْمِ، فَإِنَّهُ يَتَّسِعُ بِهِ.", source: "نهج البلاغة" },
-    { id: 2, topic: "الأخلاق", text: "أَكْرَمُ الْحَسَبِ حُسْنُ الْخُلُقِ.", source: "نهج البلاغة" },
-    { id: 3, topic: "الصبر", text: "الصَّبْرُ صَبْرَانِ: صَبْرٌ عَلَى مَا تَكْرَهُ، وَصَبْرٌ عَمَّا تُحِبُّ.", source: "غرر الحكم" },
-    { id: 4, topic: "العدل", text: "العَدلُ حَياةُ الأَحكامِ.", source: "غرر الحكم" },
-    { id: 5, topic: "العمل", text: "قيمة كل امرئ ما يحسنه.", source: "نهج البلاغة" },
-    { id: 6, topic: "الزهد", text: "الزُّهْدُ كُلُّهُ بَيْنَ كَلِمَتَيْنِ مِنَ الْقُرْآنِ: لِكَيْلا تَأْسَوْا عَلى ما فاتَكُمْ وَلا تَفْرَحُوا بِما آتاكُمْ.", source: "نهج البلاغة" },
-    { id: 7, topic: "الصحبة", text: "لاَ يَكُونُ الصَّدِيقُ صَدِيقاً حَتَّى يَحْفَظَ أَخَاهُ فِي ثَلاَثٍ: فِي نَكْبَتِهِ، وَغَيْبَتِهِ، وَوَفَاتِهِ.", source: "نهج البلاغة" },
-    { id: 8, topic: "التواضع", text: "تَمامُ الإحسانِ التَّواضُعُ.", source: "غرر الحكم" },
-    { id: 9, topic: "اللسان", text: "لِسَانُ الْعَاقِلِ وَرَاءَ قَلْبِهِ، وَقَلْبُ الأَحْمَقِ وَرَاءَ لِسَانِهِ.", source: "نهج البلاغة" },
-    { id: 10, topic: "الفقر", text: "الْفَقْرُ الْمَوْتُ الْأَكْبَرُ.", source: "نهج البلاغة" },
-    { id: 11, topic: "المرأة", text: "المرأة ريحانة وليست بقهرمانة.", source: "نهج البلاغة" },
-    { id: 12, topic: "الشجاعة", text: "الجرأة على المعاصي من لؤم الطباع.", source: "غرر الحكم" },
-    { id: 13, topic: "الاستقامة", text: "الاستقامة خير زاد.", source: "غرر الحكم" }
+// Sample of the massive data extracted from the PDF
+const nahjData = [
+    { type: 'khutab', text: "الْحَمْدُ لِلَّهِ الَّذِي لاَ يَبْلُغُ مِدْحَتَهُ الْقَائِلُونَ، وَلاَ يُحْصِي نَعْمَاءَهُ الْعَادُّونَ...", ref: "الخطبة 1" },
+    { type: 'hikam', text: "الْعَجْزُ آفَةٌ، وَالصَّبْرُ شَجَاعَةٌ، وَالزُّهْدُ ثَرْوَةٌ، وَالْوَرَعُ جُنَّةٌ...", ref: "حكمة 4" },
+    { type: 'rasail', text: "مِنَ الْوَالِدِ الْفَانِي، الْمُقِرِّ لِلزَّمَانِ... إِلَى الْمَوْلُودِ الْمُؤَمِّلِ مَا لاَ يُدْرِكُ...", ref: "من وصيته للحسن (ع)" },
+    { type: 'hikam', text: "أَزْرَى بِنَفْسِهِ مَنِ اسْتَشْعَرَ الطَّمَعَ، وَرَضِيَ بِالذُّلِّ مَنْ كَشَفَ عَنْ ضُرِّهِ...", ref: "حكمة 1" },
+    { type: 'hikam', text: "لِسَانُ الْعَاقِلِ وَرَاءَ قَلْبِهِ، وَقَلْبُ الأَحْمَقِ وَرَاءَ لِسَانِهِ...", ref: "حكمة 40" }
+    // More entries continue here up to 1000...
 ];
 
-let favorites = JSON.parse(localStorage.getItem('ali_favs')) || [];
+let itemsShown = 12;
 
 document.addEventListener('DOMContentLoaded', () => {
-    populateTopics();
-    setDailyQuote();
-    renderQuotes(quotes);
-    
-    document.getElementById('theme-toggle').onclick = () => {
-        document.body.classList.toggle('dark-theme');
+    setupTheme();
+    showDaily();
+    renderGrid(nahjData.slice(0, itemsShown));
+
+    // Search Logic
+    document.getElementById('search-input').oninput = (e) => {
+        const filtered = nahjData.filter(d => d.text.includes(e.target.value));
+        renderGrid(filtered);
     };
-    document.getElementById('search-input').oninput = filterQuotes;
-    document.getElementById('topic-filter').onchange = filterQuotes;
+
+    // Load More Logic
+    document.getElementById('load-more-btn').onclick = () => {
+        itemsShown += 12;
+        renderGrid(nahjData.slice(0, itemsShown));
+    };
+
+    // Scrolling Progress
+    window.onscroll = () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById("progress-bar").style.width = scrolled + "%";
+    };
 });
 
-function populateTopics() {
-    const select = document.getElementById('topic-filter');
-    const topics = [...new Set(quotes.map(q => q.topic))];
-    topics.forEach(t => {
-        let opt = new Option(t, t);
-        select.add(opt);
-    });
+function setupTheme() {
+    document.getElementById('theme-toggle').onclick = () => {
+        document.body.classList.toggle('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    };
 }
 
-function setDailyQuote() {
-    const daily = quotes[Math.floor(Math.random() * quotes.length)];
-    document.getElementById('daily-text').textContent = daily.text;
-    document.getElementById('daily-source').textContent = `— ${daily.source}`;
-}
-
-function renderQuotes(data) {
-    const container = document.getElementById('quotes-container');
-    container.innerHTML = '';
-    data.forEach(q => {
-        const card = document.createElement('div');
-        card.className = 'quote-card';
-        card.innerHTML = `
-            <p class="quote-text">${q.text}</p>
-            <div class="actions">
-                <button class="btn-icon" onclick="speak('${q.text}')">🔊</button>
-                <button class="btn-icon" onclick="share('${q.text}')">📱</button>
+function renderGrid(data) {
+    const grid = document.getElementById('quotes-grid');
+    grid.innerHTML = data.map(item => `
+        <div class="quote-card">
+            <p>${item.text}</p>
+            <div class="card-footer">
+                <span class="tag">${item.type}</span>
+                <small>${item.ref}</small>
             </div>
-        `;
-        container.appendChild(card);
-    });
+        </div>
+    `).join('');
 }
 
-function filterQuotes() {
-    const term = document.getElementById('search-input').value;
-    const topic = document.getElementById('topic-filter').value;
-    const filtered = quotes.filter(q => 
-        q.text.includes(term) && (topic === 'all' || q.topic === topic)
-    );
-    renderQuotes(filtered);
-}
-
-function speak(text) {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ar-SA';
-    window.speechSynthesis.speak(u);
-}
-
-function share(text) {
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+function showDaily() {
+    const random = nahjData[Math.floor(Math.random() * nahjData.length)];
+    document.getElementById('daily-text').innerText = random.text;
+    document.getElementById('daily-source').innerText = random.ref;
 }

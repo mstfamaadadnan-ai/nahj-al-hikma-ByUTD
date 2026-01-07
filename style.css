@@ -27,39 +27,48 @@ body {
     overflow-x: hidden; /* Prevents horizontal scroll from the horse */
 }
 
-/* --- Running Horse Animation --- */
+/* --- Background GIF Animation --- */
 .background-animation {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Placed behind all content */
+    z-index: -1; 
     overflow: hidden;
-    opacity: 0.08; /* Very subtle to keep text readable */
-    pointer-events: none; /* User can click "through" the animation */
+    opacity: 0.12; /* Subtle transparency */
+    pointer-events: none;
 }
 
-.horse-wrapper {
+.horse-gif {
     position: absolute;
-    top: 75%; /* Positioned toward the bottom */
-    width: 120px;
-    animation: sideToSide 20s linear infinite;
-}
-
-.horse-svg {
-    width: 100%;
+    top: 70%; 
+    width: 150px; /* Size of the horse */
     height: auto;
-    color: var(--primary-color);
+    animation: sideToSide 15s linear infinite;
 }
 
+/* Side to Side Movement Logic */
 @keyframes sideToSide {
-    0% { left: -150px; transform: scaleX(1); } /* Start off-screen right-facing */
-    49% { transform: scaleX(1); }
-    50% { left: 100%; transform: scaleX(-1); } /* Flip to face left */
-    99% { transform: scaleX(-1); }
-    100% { left: -150px; transform: scaleX(1); } /* Back to start */
-}
+    0% { 
+        left: -200px; 
+        transform: scaleX(1); /* Facing right */
+    }
+    49% { 
+        transform: scaleX(1); 
+    }
+    50% { 
+        left: 100%; 
+        transform: scaleX(-1); /* Flip facing left */
+    }
+    99% { 
+        transform: scaleX(-1); 
+    }
+    100% { 
+        left: -200px; 
+        transform: scaleX(1); 
+    }
+
 
 /* --- Header & Navigation --- */
 header {

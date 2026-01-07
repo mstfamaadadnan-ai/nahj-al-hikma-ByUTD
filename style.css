@@ -1,40 +1,204 @@
+/* --- Global Variables & Themes --- */
 :root {
     --bg-color: #f4f1ea;
     --card-bg: #ffffff;
     --text-color: #2c3e50;
-    --primary-color: #2d5a27;
-    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+    --primary-color: #2d5a27; /* Deep Islamic Green */
+    --accent-color: #c0392b;
+    --shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .dark-theme {
     --bg-color: #1a1a1a;
     --card-bg: #2d2d2d;
     --text-color: #e0e0e0;
+    --primary-color: #4da344;
 }
 
+/* --- Base Styles --- */
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Tajawal', sans-serif;
     margin: 0;
-    transition: 0.3s;
+    padding: 0;
+    transition: all 0.4s ease;
     line-height: 1.6;
+    overflow-x: hidden; /* Prevents horizontal scroll from the horse */
 }
 
-header { background: var(--primary-color); color: white; padding: 1rem 5%; }
-nav { display: flex; justify-content: space-between; align-items: center; }
-.logo-container { display: flex; align-items: center; gap: 10px; }
-.app-logo { width: 40px; height: 40px; border-radius: 50%; }
-.logo-text { font-family: 'Amiri', serif; font-size: 1.5rem; }
+/* --- Running Horse Animation --- */
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Placed behind all content */
+    overflow: hidden;
+    opacity: 0.08; /* Very subtle to keep text readable */
+    pointer-events: none; /* User can click "through" the animation */
+}
 
-main { padding: 2rem 5%; max-width: 1000px; margin: auto; }
-.card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 20px; border-right: 5px solid var(--primary-color); }
+.horse-wrapper {
+    position: absolute;
+    top: 75%; /* Positioned toward the bottom */
+    width: 120px;
+    animation: sideToSide 20s linear infinite;
+}
 
-.controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-input, select, button { padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; }
+.horse-svg {
+    width: 100%;
+    height: auto;
+    color: var(--primary-color);
+}
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-.quote-card { background: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: var(--shadow); }
-.quote-text { font-family: 'Amiri', serif; font-size: 1.3rem; }
-.actions { margin-top: 15px; display: flex; gap: 10px; }
-.btn-icon { background: none; border: 1px solid #ddd; cursor: pointer; padding: 5px 10px; border-radius: 5px; font-size: 1rem; }
+@keyframes sideToSide {
+    0% { left: -150px; transform: scaleX(1); } /* Start off-screen right-facing */
+    49% { transform: scaleX(1); }
+    50% { left: 100%; transform: scaleX(-1); } /* Flip to face left */
+    99% { transform: scaleX(-1); }
+    100% { left: -150px; transform: scaleX(1); } /* Back to start */
+}
+
+/* --- Header & Navigation --- */
+header {
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem 5%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+
+.logo-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+#theme-toggle {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* --- Main Content Layout --- */
+main {
+    padding: 2rem 5%;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+    border-right: 6px solid var(--primary-color);
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+input, select, .controls button {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-family: inherit;
+    background: var(--card-bg);
+    color: var(--text-color);
+    flex: 1;
+    min-width: 150px;
+}
+
+/* --- Quotes Grid --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.quote-card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s;
+}
+
+.quote-card:hover {
+    transform: translateY(-5px);
+}
+
+.quote-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.actions button {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.actions button:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    .controls { flex-direction: column; }
+    .logo-text { font-size: 1.2rem; }
+    .horse-wrapper { width: 80px; } /* Smaller horse for small screens */
+}

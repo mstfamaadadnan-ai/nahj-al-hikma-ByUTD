@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نهج الحكمة | أقوال الإمام علي (ع)</title>
+    
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body class="light-theme">
+
+    <div class="background-animation">
+        <div class="horse-wrapper">
+            <svg class="horse-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10,35 Q15,25 25,30 T45,25 T65,30 T85,25" fill="none" stroke="currentColor" stroke-width="2" />
+                <path d="M25,30 L20,45 M45,25 L40,40 M65,30 L60,45 M85,25 L80,40" stroke="currentColor" stroke-width="2" />
+                <circle cx="90" cy="22" r="3" fill="currentColor" />
+            </svg>
+        </div>
+    </div>
 
     <header>
         <nav>
@@ -40,9 +52,8 @@
 
     <script src="script.js"></script>
     <script>
+        // Registering the Service Worker for Offline Mode
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
     </script>
-</body>
-</html>
